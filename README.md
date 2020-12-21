@@ -1,7 +1,7 @@
-CS111 Operating System Principles
-Samuel Shen
+# CS111 Operating System Principles
+## Samuel Shen
 
-This following repository contains my work from CS111.
+### This following repository contains my work from CS111.
 
 Project 0: Basic C programming, POSIX file operations, process command line
 arguments, create a basic Makefile
