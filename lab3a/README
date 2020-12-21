@@ -1,0 +1,12 @@
+#NAME: Samuel Shen, Chandrasekhar Suresh
+#EMAIL: sam.shen321@gmail.com, chandra.b.suresh@gmail.com
+#ID: 405325252, 605304814
+
+This tarball contains:
+     A C source module lab3a.c that explores basic file system information
+     A Makefile with the following targets:
+       Default to compile the program
+       Dist to create the deliverable tarball
+       clean to remove the executable and tarball
+     This README file
+     ext2_fs.h: This is the header file with useful structs for lab3a.c

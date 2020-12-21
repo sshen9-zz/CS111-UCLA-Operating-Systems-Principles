@@ -1,0 +1,31 @@
+NAME: Samuel Shen
+EMAIL: sam.shen321@gmail.com
+ID: 405325252
+
+
+The tarball contains a file lab0.c which provides the code for copying text from an input source to an output source. It also contains 2 files which are
+screenshots of the gdb debugger specified in the assignment. As for the smoke
+test cases in the Makefile, I found it easier to run a bash script from the check target; the bash script is also included in the tarball and is named
+sanity.sh.
+
+For the actual C file, I ran into various problems while doing the assignment.
+First, I needed to research all the different system calls for file manipulation.
+I also ran into problems with the getopt_long function. To solve this, I looked
+online in the manual page and utilized the example code they gave, which can
+be found here:
+
+https://www.gnu.org/software/libc/manual/html_node/Getopt-Long-Option-Example.html
+
+For the sanity check test cases, I decided to include the following:
+1. Check if the basic functionality was working with no options
+2. Check if code works when adding valid input and output options
+3. Check if the segfault and catch options return a valid code
+4. Check if an unrecognized argument returns a valid code
+5. Check if an error in the input option returns a valid code
+6. Check if an error in creating the output file returns a valid code
+
+All of these sanity test cases were relatively easy to implement within the bash
+script and basically just test the various options and return codes specified
+in the assignment. The only slightly complicated one was the output test; for the output
+test, I created a file with no permissions, and I tested if
+the creat(2) function would throw an error.

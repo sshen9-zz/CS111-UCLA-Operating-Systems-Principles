@@ -1,0 +1,13 @@
+#NAME: Samuel Shen
+#EMAIL: sam.shen321@gmail.com
+#ID: 405325252
+
+This tarball contains the items:
+	A C source file lab4c_tcp.c
+	A C source file lab4c_tls.c
+	This README
+	A Makefile with targets:
+		default to compile both c programs
+		clean to get rid of the tarball and executable
+		dist to create the tarball
+

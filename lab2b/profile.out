@@ -1,0 +1,230 @@
+Total: 303 samples
+     218  71.9%  71.9%      219  72.3% getLockWaitTime
+      15   5.0%  76.9%       46  15.2% SortedList_insert
+      13   4.3%  81.2%       38  12.5% SortedList_lookup
+      12   4.0%  85.1%       12   4.0% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:1734
+      11   3.6%  88.8%       11   3.6% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:203
+       7   2.3%  91.1%        7   2.3% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:161
+       6   2.0%  93.1%        6   2.0% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:1734
+       4   1.3%  94.4%        4   1.3% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:205
+       4   1.3%  95.7%        4   1.3% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:212
+       3   1.0%  96.7%        3   1.0% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:1734
+       2   0.7%  97.4%        2   0.7% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:204
+       2   0.7%  98.0%        2   0.7% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:211
+       2   0.7%  98.7%        2   0.7% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:1734
+       1   0.3%  99.0%        1   0.3% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:165
+       1   0.3%  99.3%        1   0.3% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:206
+       1   0.3%  99.7%        1   0.3% ?? /usr/src/debug////////glibc-2.17-c758a686/string/../sysdeps/x86_64/multiarch/strcmp-sse42.S:1733
+       1   0.3% 100.0%        1   0.3% 0x00007fff9ab8080e
+       0   0.0% 100.0%      303 100.0% ?? /usr/src/debug////////glibc-2.17-c758a686/misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:118
+       0   0.0% 100.0%        1   0.3% __GI___clock_gettime
+       0   0.0% 100.0%      303 100.0% runThread
+       0   0.0% 100.0%      303 100.0% start_thread
+ROUTINE ====================== runThread in /u/cs/ugrad/samuels/cs111/lab2b/lab2_list.c
+     0    303 Total samples (flat / cumulative)
+     .      .   96:     fprintf(stderr, "SEGFAULT\n");
+     .      .   97:     //    fprintf(stderr, "SEGFAULT: --threads=%d --iterations=%d --yield=%s --sync=%s\n", threads, iterations, getYield(), getSync());
+     .      .   98:     exit(2);
+     .      .   99: }
+     .      .  100: 
+---
+     .      .  101: void* runThread(void* input){
+     .      .  102:     int t_index = *((int*)input);
+     .      .  103:     int startind = t_index*iterations;
+     .      .  104: 
+     .      .  105:     //INSERT FOR EACH NODE
+     .      .  106:     for(int i=startind; i<startind+iterations; i++){
+     .      .  107:         //hash key to identify which list
+     .      .  108:         int listindex = nodelist[i].key[0]%num_lists;
+     .      .  109:        
+     .      .  110:         if(opt_sync!='n'){
+     .    145  111:             getLockWaitTime(t_index, listindex);
+     .      .  112:         }
+     .      .  113:         
+     .     46  114:         SortedList_insert(&lists[listindex], &nodelist[i]);
+     .      .  115: 
+     .      .  116:         if(opt_sync=='m'){            
+     .      .  117:             pthread_mutex_unlock(&mutexlocks[listindex]);
+     .      .  118:         }else if(opt_sync=='s'){
+     .      .  119:             __sync_lock_release(&spinlocks[listindex]);
+     .      .  120:         }
+     .      .  121: 
+     .      .  122:     }
+     .      .  123: 
+     .      .  124:     if(opt_sync=='m'){
+     .      .  125:         int length = 0;
+     .      .  126:         for(int i=0; i<num_lists; i++){
+     .      .  127:             getLockWaitTime(t_index, i);
+     .      .  128:             length+=SortedList_length(&lists[i]);
+     .      .  129:             pthread_mutex_unlock(&mutexlocks[i]);
+     .      .  130:         }
+     .      .  131:     }else if(opt_sync=='s'){
+     .      .  132:         int length = 0;
+     .      .  133:         for(int i=0; i<num_lists; i++){
+     .      .  134:             getLockWaitTime(t_index, i);
+     .      .  135:             length+=SortedList_length(&lists[i]);
+     .      .  136:             __sync_lock_release(&spinlocks[i]);
+     .      .  137:         }
+     .      .  138:     }
+     .      .  139: 
+     .      .  140:     /* //GET LENGTH */
+     .      .  141:     /* if(opt_sync=='m'){ */
+     .      .  142:     /*     getMutexWaitTime(t_index); */
+     .      .  143:         
+     .      .  144:     /* }else if(opt_sync=='s'){ */
+     .      .  145:     /*     //spin until lock is released */
+     .      .  146:     /*     while(__sync_lock_test_and_set(&spin_lock, 1)==1); */
+     .      .  147:     /* }     */
+     .      .  148:     
+     .      .  149:     /* SortedList_length(&list); */
+     .      .  150: 
+     .      .  151:     /* if(opt_sync=='m'){ */
+     .      .  152:     /*     pthread_mutex_unlock(&lock); */
+     .      .  153:     /* }else if(opt_sync=='s'){ */
+     .      .  154:     /*     __sync_lock_release(&spin_lock); */
+     .      .  155:     /* } */
+     .      .  156: 
+     .      .  157: 
+     .      .  158:     //LOOKUP AND DELETE FOR EACH NODE
+     .      .  159:     for(int i=startind; i<startind+iterations; i++){
+     .      .  160:         int listindex = nodelist[i].key[0]%num_lists;
+     .      .  161:             
+     .      .  162:         if(opt_sync!='n'){
+     .     74  163:             getLockWaitTime(t_index, listindex);
+     .      .  164:             
+     .      .  165:         }
+     .      .  166: 
+     .     38  167:         SortedListElement_t* foundelement = SortedList_lookup(&lists[listindex], nodelist[i].key);
+     .      .  168:         
+     .      .  169:         if(foundelement==NULL){
+     .      .  170:             fprintf(stderr, "Lookup failed\n");
+     .      .  171:             exit(2);
+     .      .  172:         }
+     .      .  173: 
+     .      .  174:         
+     .      .  175:         if(SortedList_delete(foundelement)==1){
+     .      .  176:             fprintf(stderr, "delete failed\n");
+     .      .  177:             //fprintf(stderr, "Delete failed, corrupted pointer in list. --threads=%d --iterations=%d --yield=%s --sync=%s\n", threads, iterations, getYield(), getSync());
+     .      .  178:             exit(2);
+     .      .  179:         }
+     .      .  180: 
+     .      .  181:         if(opt_sync=='m'){
+     .      .  182:             pthread_mutex_unlock(&mutexlocks[listindex]);
+     .      .  183:         }else if(opt_sync=='s'){
+     .      .  184:             __sync_lock_release(&spinlocks[listindex]);
+     .      .  185:         }
+     .      .  186: 
+     .      .  187:     }
+     .      .  188: 
+     .      .  189:     return NULL;
+     .      .  190: }
+---
+     .      .  191: 
+     .      .  192:   
+     .      .  193: int main(int argc, char** argv){
+     .      .  194:     signal(SIGSEGV, sighandler);
+     .      .  195:     
+ROUTINE ====================== runThread in /u/cs/ugrad/samuels/cs111/lab2b/lab2_list.c
+     0    303 Total samples (flat / cumulative)
+     .      .   96:     fprintf(stderr, "SEGFAULT\n");
+     .      .   97:     //    fprintf(stderr, "SEGFAULT: --threads=%d --iterations=%d --yield=%s --sync=%s\n", threads, iterations, getYield(), getSync());
+     .      .   98:     exit(2);
+     .      .   99: }
+     .      .  100: 
+---
+     .      .  101: void* runThread(void* input){
+     .      .  102:     int t_index = *((int*)input);
+     .      .  103:     int startind = t_index*iterations;
+     .      .  104: 
+     .      .  105:     //INSERT FOR EACH NODE
+     .      .  106:     for(int i=startind; i<startind+iterations; i++){
+     .      .  107:         //hash key to identify which list
+     .      .  108:         int listindex = nodelist[i].key[0]%num_lists;
+     .      .  109:        
+     .      .  110:         if(opt_sync!='n'){
+     .    145  111:             getLockWaitTime(t_index, listindex);
+     .      .  112:         }
+     .      .  113:         
+     .     46  114:         SortedList_insert(&lists[listindex], &nodelist[i]);
+     .      .  115: 
+     .      .  116:         if(opt_sync=='m'){            
+     .      .  117:             pthread_mutex_unlock(&mutexlocks[listindex]);
+     .      .  118:         }else if(opt_sync=='s'){
+     .      .  119:             __sync_lock_release(&spinlocks[listindex]);
+     .      .  120:         }
+     .      .  121: 
+     .      .  122:     }
+     .      .  123: 
+     .      .  124:     if(opt_sync=='m'){
+     .      .  125:         int length = 0;
+     .      .  126:         for(int i=0; i<num_lists; i++){
+     .      .  127:             getLockWaitTime(t_index, i);
+     .      .  128:             length+=SortedList_length(&lists[i]);
+     .      .  129:             pthread_mutex_unlock(&mutexlocks[i]);
+     .      .  130:         }
+     .      .  131:     }else if(opt_sync=='s'){
+     .      .  132:         int length = 0;
+     .      .  133:         for(int i=0; i<num_lists; i++){
+     .      .  134:             getLockWaitTime(t_index, i);
+     .      .  135:             length+=SortedList_length(&lists[i]);
+     .      .  136:             __sync_lock_release(&spinlocks[i]);
+     .      .  137:         }
+     .      .  138:     }
+     .      .  139: 
+     .      .  140:     /* //GET LENGTH */
+     .      .  141:     /* if(opt_sync=='m'){ */
+     .      .  142:     /*     getMutexWaitTime(t_index); */
+     .      .  143:         
+     .      .  144:     /* }else if(opt_sync=='s'){ */
+     .      .  145:     /*     //spin until lock is released */
+     .      .  146:     /*     while(__sync_lock_test_and_set(&spin_lock, 1)==1); */
+     .      .  147:     /* }     */
+     .      .  148:     
+     .      .  149:     /* SortedList_length(&list); */
+     .      .  150: 
+     .      .  151:     /* if(opt_sync=='m'){ */
+     .      .  152:     /*     pthread_mutex_unlock(&lock); */
+     .      .  153:     /* }else if(opt_sync=='s'){ */
+     .      .  154:     /*     __sync_lock_release(&spin_lock); */
+     .      .  155:     /* } */
+     .      .  156: 
+     .      .  157: 
+     .      .  158:     //LOOKUP AND DELETE FOR EACH NODE
+     .      .  159:     for(int i=startind; i<startind+iterations; i++){
+     .      .  160:         int listindex = nodelist[i].key[0]%num_lists;
+     .      .  161:             
+     .      .  162:         if(opt_sync!='n'){
+     .     74  163:             getLockWaitTime(t_index, listindex);
+     .      .  164:             
+     .      .  165:         }
+     .      .  166: 
+     .     38  167:         SortedListElement_t* foundelement = SortedList_lookup(&lists[listindex], nodelist[i].key);
+     .      .  168:         
+     .      .  169:         if(foundelement==NULL){
+     .      .  170:             fprintf(stderr, "Lookup failed\n");
+     .      .  171:             exit(2);
+     .      .  172:         }
+     .      .  173: 
+     .      .  174:         
+     .      .  175:         if(SortedList_delete(foundelement)==1){
+     .      .  176:             fprintf(stderr, "delete failed\n");
+     .      .  177:             //fprintf(stderr, "Delete failed, corrupted pointer in list. --threads=%d --iterations=%d --yield=%s --sync=%s\n", threads, iterations, getYield(), getSync());
+     .      .  178:             exit(2);
+     .      .  179:         }
+     .      .  180: 
+     .      .  181:         if(opt_sync=='m'){
+     .      .  182:             pthread_mutex_unlock(&mutexlocks[listindex]);
+     .      .  183:         }else if(opt_sync=='s'){
+     .      .  184:             __sync_lock_release(&spinlocks[listindex]);
+     .      .  185:         }
+     .      .  186: 
+     .      .  187:     }
+     .      .  188: 
+     .      .  189:     return NULL;
+     .      .  190: }
+---
+     .      .  191: 
+     .      .  192:   
+     .      .  193: int main(int argc, char** argv){
+     .      .  194:     signal(SIGSEGV, sighandler);
+     .      .  195:     

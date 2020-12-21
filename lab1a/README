@@ -1,0 +1,22 @@
+NAME: Samuel Shen
+EMAIL: sam.shen321@gmail.com
+ID: 405325252
+
+I first started by researching all the various system calls
+specified in the spec. Approaching the first task, I referenced my previous
+assignment lab0 to remind me on how to use the getopt_long api for parameter
+parsing. Doing the terminal processing was fine for the most part, although
+I ran into some errors for when I forgot to reset the terminal settings.
+
+Passing the input and output between two processes was a lot more difficult;
+I found it very confusing to fork two processes within the same code. I eventually
+figured out the basics, but also ran into some problems with pollfds not working correctly.
+It was very frustrating when the terminal would crash, and I would have no idea why.
+
+For testing, I relied on the test script for the most part, in which my program
+was eventually able to pass all test cases. I also tested certain functionalities myself, such
+as sending a SIGINT signal to the shell with Ctrl C, and seeing whether or not my terminal would still work
+from there.
+
+As for limitations, I am not 100% sure if I am performing error handling completely correctly.
+I watched out for the EOF and the poll errors, but I am not too confident in my implementation.

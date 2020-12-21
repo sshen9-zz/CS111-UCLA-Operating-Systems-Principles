@@ -1,0 +1,72 @@
+NAME: Samuel Shen
+EMAIL: sam.shen321@gmail.com
+ID: 405325252
+
+    This tarball includes:
+    A file lab2_add.c that tests synchronization on a shared variable
+    A file lab2_list.c that tests synchronization on a linked list
+    A file SortedList.h given to us
+    SortedList.c, containing implementations of the doubly, circular linked list
+    A Makefile to build the targets:
+        build to compile programs
+        tests to run the test scripts and generate output in csv format
+        graphs to make the graphs using the given plotting scripts
+        dist to create the tarball
+        clean to remove executables and tarball
+    2 CSV files containing test data
+    Several pictures of graphs generated for part A and part B
+    2 Python files:
+        generate_add.py which generates the data for the add part
+        generate_list.py which generates data for the linked list part
+        files imported the OS module to run linux commands
+
+Questions:
+
+2.1.1.
+    It takes many iterations before errors are seen because with fewer
+    iterations, you simply have less chances that multiple threads will
+    enter the critcal section and edit the shared variable at the same time.
+    With more iterations, the opposite is true, and there is a much greater
+    chance of that happening. As a result, a significantly smaller number of
+    iterations have a better chance of succeeding.
+
+2.1.2.
+    The yield runs are a lot slower because the calling thread
+    needs to relinquish the CPU. This is expensive because you will
+    significantly increase the number of context switches, which is where
+    this additional time is going. It is difficult to get the valid
+    per-operation timings with the yield option because of the context switches,
+    which are handled by the kernel.
+
+2.1.3.
+    If you have several threads, the cost per operation would drop with increasing
+    iterations because the time that you spent creating and joining threads would
+    be more spread out through each iteration. With only one thread, the cost
+    per operation could be reduced due to the principle of locality. The "correct" cost
+    could be determined after the program runs for a while, as the graph is decreasing
+    exponentially.
+
+2.1.4.
+    With low numbers of threads, the overhead isn't big enough to make too much of a
+    difference. However, as the number of threads increase, we see that the per-operation
+    cost for protected operations begin to increase. This is because threads start to
+    spend more and more time waiting to acquire the lock from the other threads, which
+    begins to increase overhead significantly.
+
+2.2.1
+    The time per operation for mutex protected operations in part 1 slowly increased
+    as the number of threads increased. However, in part 2, the time stayed pretty much
+    the same as threads increased. This is likely due to the fact that the total time of
+    operations for part one was not that large, so the locking produced more overhead per operation
+    which increased the time. In part 2, list operations are much more time consuming than part 1.
+    Therefore, when adjusted for length of the list, the locking takes less of a percentage of
+    the total time, which reduces the cost per operation.
+
+2.2.2.
+    The time per protected operation for the list operations is fairly similar for mutex and spin locks
+    when considering smaller numbers of threads. However, when the threads increase, the spin locks take
+    considerably more time, evidenced by the jump in cost per operation in the graph. This is because spin
+    locks are generally much more expensive than mutexes, because a spin lock will keep spinning and thus
+    keep using the CPU until the lock is available, while a mutex will not keep consuming CPU time and
+    will just come back to it when resource is unlocked.
+    

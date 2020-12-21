@@ -1,0 +1,12 @@
+#NAME: Samuel Shen, Chandrasekhar Suresh
+#EMAIL: sam.shen321@gmail.com, chandra.b.suresh@gmail.com
+#ID: 405325252, 605304814
+
+This tarball contains:
+     lab3b_c     ... A source module that is the main bash file that runs the python auditting script
+     Makefile    ... A Makefile with the following targets:
+     		            Default to compile the program
+			    Dist to create the deliverable tarball
+			    clean to remove the executable and tarball
+     README      ... This readme file
+     lab3b.py    ... A python file that does the main auditing work

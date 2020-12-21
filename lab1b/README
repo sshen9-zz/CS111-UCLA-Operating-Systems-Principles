@@ -1,0 +1,24 @@
+NAME: Samuel Shen
+EMAIL: sam.shen321@gmail.com
+ID: 405325252
+
+The contents of the tarball include:
+
+    A file "lab1b-client.c" that takes in input from the keyboard,
+    compresses it, and sends the input over via TCP to another process "lab1b-server.c".
+
+    A file "lab1b-server.c" that takes in input from the client via TCP and
+    sends it to a shell process that is forked using pipes. The server then gets the
+    output from the shell process and sends it back to the client through the socket.
+
+    A Makefile that contains the targets "default", which compiles both the C files,
+    "clean", which removes the executables and the tarball, and "dist" which builds the tarball.
+
+    This README file.
+
+There were many challenges I came across when writing this project, most of which
+came from the use of zlib, but also some with the TCP connection. My testing methodology
+included the use of the provided test script, as well as my own terminal commands through
+the client process to see if the output was as expected.
+
+    

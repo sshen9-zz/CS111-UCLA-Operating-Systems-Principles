@@ -1,0 +1,16 @@
+NAME: Samuel Shen
+EMAIL: sam.shen321@gmail.com
+ID: 405325252
+
+Beaglebone serial number: BBGW19010776
+Wifi MAC address: 2CF7F106A2DC
+
+The tar file contains the following:
+1. A selfie taken with my assembled beaglebone with the Grove Base Cape
+2. Screenshot connected.png showing my configured network access and the name I gave my beaglebone
+3. Copy.png that shows me copying helloworld.c to my beaglebone through scp
+4. git.png that shows me successfully cloning a git repo onto my local environment. Note that git was already
+installed so I didn't have to install it.
+5. A makefile with a target dist that builds the tarball, and a target clean that removes the tarball.
+6. This readme file
+
